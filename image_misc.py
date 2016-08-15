@@ -224,7 +224,9 @@ def tile_images_make_tiles(data, padsize=1, padval=0, hw=None, highlights = None
     if len(padval) == 1:
         data = np.pad(data, padding, mode='constant', constant_values=(padval, padval))
     else:
-        data = np.pad(data, padding, mode='constant', constant_values=(0, 0))
+        data_big = np.zeros((width*height, data.shape[1] + 2*padsize, data.shape[2] + 2*padsize, 3))
+        data_big[:-width*height + data.shape[0], padsize:-padsize, padsize:-padsize, :] = data
+        data = data_big
         for cc in (0,1,2):
             # Replace 0s with proper color in each channel
             data[:padding[0][0],  :, :, cc] = padval[cc]
